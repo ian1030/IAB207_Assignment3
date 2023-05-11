@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Event Management System - Home</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Darumadrop One">
+</head>
+<body>
+
+
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+        <a class="navbar-brand" href="index.html" id="navbarbrand">Give Back Nation</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button> 
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mx-auto" id="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" href="index.html">Home</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="booking.html">Booking</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="create.html">Create a Event</a>
+                </li>
+            </ul>                                       
+        </div>  
+    </div>
+</nav>
+<div class="p-5 text-center bg-image rounded-3" id=hero>
+  <div class="mask">
+    <div class="d-flex justify-content-center align-items-center h-100">
+      <div class="text">
+        <h1 class="mb-3" style="font-size:64px">Join Us Now</h1>
+        <h4 class="mb-3" style="font-size:32px">interested?</h4>
+        <a class="btn btn-outline-dark btn btn-light btn-lg" href="#!" role="button" style="border-radius: 50px;border-width:3px">Register here</a>
+      </div>
+    </div>
+  </div>
+</div>
+  <div class="container my-5">
+    <h1>Welcome to GiveBack Nation</h1>
+    <p class="lead">What's on GiveBack Nation</p>
+
+    <div class="row">
+      <div class="col-md-3">
+        <h3>Categories</h3>
+        <div class="list-group" id="list-group">
+          <a href="" class="list-group-item list-group-item-action">All</a>
+          <a href="" class="list-group-item list-group-item-action">Charity Run</a>
+          <a href="" class="list-group-item list-group-item-action">Charity Auction</a>
+          <a href="" class="list-group-item list-group-item-action">Charity Food Donation</a>
+          <a href="" class="list-group-item list-group-item-action">Others</a>
+        </div>
+      </div>
+      <div class="col-md-9">
+        <div class="row" id="eventList">
+          <div class="col-md-4 mb-4">
+            <div class="card">
+              <img src="https://images.pexels.com/photos/6646918/pexels-photo-6646918.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=350" class="card-img-top">
+              <div class="card-body">
+                <h5 class="card-title">Charity Run</h5>
+                <span class="badge badge-success">Open</span>
+                <p class="card-text">Join us for a volunteering opportunity! This upcoming charity event is focused on collecting donations for those in need and also you will be helping us in giving out foods!.</p>
+                <a href="details2.html" class="btn btn-outline-dark btn btn-light" role="button" style="border-radius: 10px;border-width:3px">View Details</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 mb-4" data-category="sports">
+            <div class="card">
+              <img src="https://images.pexels.com/photos/6348129/pexels-photo-6348129.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=350" class="card-img-top">
+              <div class="card-body">
+                <h5 class="card-title">Volunteering</h5>
+                <span class="badge badge-success">Open</span>
+                <p class="card-text">Join us for a rewarding volunteering experience and make a difference in your community.</p>
+                <a href="details2.html" class="btn btn-outline-dark btn btn-light" role="button" style="border-radius: 10px;border-width:3px">View Details</a>
+              </div>  
+            </div>
+          </div>
+          <div class="col-md-4 mb-4" data-category="food">
+            <div class="card">
+              <img src="data:image/jpeg;base64,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" class="card-img-top">
+              <div class="card-body">
+                <h5 class="card-title">Charity Run</h5>
+                <span class="badge badge-success">Open</span>
+                <p class="card-text">Join us for a rewarding volunteering experience and make a difference in your community.</p>
+                <a href="details2.html" class="btn btn-outline-dark btn btn-light" role="button" style="border-radius: 10px;border-width:3px">View Details</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 mb-4" data-category="education">
+            <div class="card">
+              <img src="https://runabc.co.uk/images/2020/03/charity-run2-552235.jpg" class="card-img-top">
+              <div class="card-body">
+                <h5 class="card-title">Charity Run</h5>
+                <span class="badge badge-warning">Inactive</span>
+                <p class="card-text">Join us for a rewarding volunteering experience and make a difference in your community.</p>
+                <a href="details2.html" class="btn btn-outline-dark btn btn-light" role="button" style="border-radius: 10px;border-width:3px">View Details</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 mb-4" data-category="food">
+            <div class="card">
+              <img src="https://images.pexels.com/photos/6646904/pexels-photo-6646904.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" class="card-img-top">
+              <div class="card-body">
+                <h5 class="card-title">Volunteering</h5>
+                <span class="badge badge-danger">Cancelled</span>
+                <p class="card-text">Join us for a rewarding volunteering experience and make a difference in your community.</p>
+                <a href="details2.html" class="btn btn-outline-dark btn btn-light" role="button" style="border-radius: 10px;border-width:3px">View Details</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 mb-4" data-category="education">
+            <div class="card">
+              <img src="https://images.pexels.com/photos/6077326/pexels-photo-6077326.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" class="card-img-top">
+              <div class="card-body">
+                <h5 class="card-title">Charity auction</h5>
+                <span class="badge badge-secondary">Sold out</span>
+                <p class="card-text">Join us for a rewarding volunteering experience and make a difference in your community.</p>
+                <a href="details2.html" class="btn btn-outline-dark btn btn-light" role="button" style="border-radius: 10px;border-width:3px">View Details</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 mb-4" data-category="food">
+            <div class="card">
+              <img src="https://images.pexels.com/photos/6995201/pexels-photo-6995201.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" class="card-img-top">
+              <div class="card-body">
+                <h5 class="card-title">Charity Food Giving</h5>
+                <span class="badge badge-success">Open</span>
+                <p class="card-text">Join us for a rewarding volunteering experience and make a difference in your community.</p>
+                <a href="details2.html" class="btn btn-outline-dark btn btn-light"  role="button" style="border-radius: 10px;border-width:3px">View Details</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 mb-4" data-category="education">
+            <div class="card">
+              <img src="https://images.pexels.com/photos/6647021/pexels-photo-6647021.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" class="card-img-top">
+              <div class="card-body">
+                <h5 class="card-title">Volunteering</h5>
+                <span class="badge badge-success">Open</span>
+                <p class="card-text">Join us for a rewarding volunteering experience and make a difference in your community.</p>
+                <a href="details2.html" class="btn btn-outline-dark btn btn-light"  role="button" style="border-radius: 10px;border-width:3px">View Details</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 mb-4" data-category="food">
+            <div class="card">
+              <img src="https://images.pexels.com/photos/8061642/pexels-photo-8061642.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" class="card-img-top">
+              <div class="card-body">
+                <h5 class="card-title">Charity Food Giving</h5>
+                <span class="badge badge-secondary">Sold out</span>
+                <p class="card-text">Join us for a rewarding volunteering experience and make a difference in your community.</p>
+                <a href="details2.html" class="btn btn-outline-dark btn btn-light" role="button" style="border-radius: 10px;border-width:3px">View Details</a>
+                
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 mb-4" data-category="education">
+            <div class="card">
+              <img src="https://images.pexels.com/photos/6647040/pexels-photo-6647040.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" class="card-img-top">
+              <div class="card-body">
+                <h5 class="card-title">Volunteering</h5>
+                <span class="badge badge-warning">Inactive</span>
+                <p class="card-text">Join us for a rewarding volunteering experience and make a difference in your community.</p>
+                <a href="details2.html" class="btn btn-outline-dark btn btn-light"  role="button" style="border-radius: 10px;border-width:3px">View Details</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+           
