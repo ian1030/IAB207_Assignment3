@@ -1,6 +1,6 @@
 #from package import Class
 from flask import Flask 
-from flask_bootstrap import Bootstrap5
+from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 
@@ -18,7 +18,7 @@ def create_app():
     #initialise db with flask app
     db.init_app(app)
 
-    bootstrap = Bootstrap5(app)
+    bootstrap = Bootstrap(app)
     
     #initialize the login manager
     login_manager = LoginManager()
@@ -30,9 +30,9 @@ def create_app():
 
     #create a user loader function takes userid and returns User
     #from .models import User  # importing here to avoid circular references
-    #@login_manager.user_loader
-    #def load_user(user_id):
-    #    return User.query.get(int(user_id))
+    @login_manager.user_loader
+    def load_user(user_id):
+       return User.query.get(int(user_id))
 
     #importing views module here to avoid circular references
     # a common practice.
@@ -41,6 +41,9 @@ def create_app():
 
     from . import auth
     app.register_blueprint(auth.bp)
+    
+    from . import event
+    app.register_blueprint(event.eventbp)
     
     return app
 

@@ -1,7 +1,8 @@
 
 from flask_wtf import FlaskForm
-from wtforms.fields import TextAreaField, SubmitField, StringField, PasswordField
-from wtforms.validators import InputRequired, Length, Email, EqualTo
+from wtforms.fields import TextAreaField, SubmitField, StringField, PasswordField, IntegerField
+from wtforms.validators import InputRequired, Length, Email, EqualTo, NumberRange
+from .models import Event
 
 
 #creates the login information
@@ -21,3 +22,12 @@ class RegisterForm(FlaskForm):
 
     #submit button
     submit = SubmitField("Register")
+
+class BookingForm(FlaskForm, Event):
+    user_name=StringField("User Name", validators=[InputRequired('Enter user name')])
+    email_id = StringField("Email Address", validators=[Email("Please enter a valid email")])
+    ticket_required = IntegerField("Ticket Neeeded", validators=[InputRequired("Enter a number"), NumberRange(min=1, max=Event.ticket_no, message="The input is invalid" )]) #the max can be the tcket number
+
+
+
+

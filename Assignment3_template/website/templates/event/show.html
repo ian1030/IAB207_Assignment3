@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+
+{% import "bootstrap4/form.html" as wtf %}
+
+{% block content %}
+{% with messages = get_flashed_messages() %}
+{% if messages %} <!-- check if there are any messages -->
+<div class="container-fluid">
+    <div class="row mt-3 mb-3">
+    <div class="col-md-12">
+    {% for message in messages %} <!--loop through the messages-->
+        <div class="alert alert-info">{{ message }}</div> <!--display as alert-->
+    {% endfor %}
+    </div>
+</div>
+</div>
+{% endif %}
+{% endwith %}
+
+<div class="container mt-5">
+    <div class="row">
+      <div class="col-md-6">
+        <img src="https://images.pexels.com/photos/6646918/pexels-photo-6646918.jpeg" class="img-fluid" alt="Event Image" />
+      </div>
+      <div class="col-md-6">
+        <h1 class="mb-3">Charity Food Giving</h1>
+        <p>Join us for a volunteering opportunity! This upcoming charity event is focused on collecting donations for those in need and also you will be helping us in giving out foods!..</p>
+        <p>Date: 1st May, 2023</p>
+        <p>Time: 2:00 PM to 6:00 PM</p>
+        <p>Venue: Brisbane City, QLD 4000</p>
+        <form>
+
+    <button type="button" class="btn btn-outline-dark btn btn-light" data-bs-toggle="modal" data-bs-target="#booking">
+    Book Event
+    </button>
+
+        <div class="modal fade" id="booking" tabindex="-1" aria-labelledby="bookingLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="bookingLabel">Book Event</h5>
+            </div>
+            <div class="modal-body">
+                {{wtf.render_form(form)}}
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-outline-dark btn btn-light">Continue to checkout</button>
+            </div>
+        </div>
+        </div>
+        </div>
+
+        </form>
+      </div>
+    </div>
+    <hr>
+    <div class="row mt-5">
+      <div class="col-md-12">
+          <section class="content-item" id="comments">
+              <div class="container">   
+                  <div class="row">
+                      <div class="col-sm-8">   
+                          <form>
+                              <h3 class="pull-left">New Comment</h3>
+                              <button type="submit" class="btn btn-outline-dark pull-right" style="margin-bottom:10px">Submit</button>
+                              <fieldset>
+                                  <div class="row">
+                                      <div class="col-sm-3 col-lg-2 hidden-xs">
+                                      </div>
+                                      <div class="form-group col-xs-12 col-sm-9 col-lg-10">
+                                          <textarea class="form-control" id="message" placeholder="Your message" required=""></textarea>
+                                      </div>
+                                  </div>  	
+                              </fieldset>
+                          </form>
+                          
+                          <h3>4 Comments</h3>
+                          
+                          <div class="media">
+                              <a class="pull-left" href="#"><img class="media-object" src="person.png" alt=""></a>
+                              <div class="media-body">
+                                  <h4 class="media-heading">Ethan Martinez</h4>
+                                  <p>It was an amazing experience!</p>
+                                  <ul class="list-unstyled list-inline media-detail pull-left">
+                                      <li><i class="fa fa-calendar"></i>09/03/2021</li>
+                                      <li><i class="fa fa-thumbs-up"></i>25</li>
+                                  </ul>
+                                  <ul class="list-unstyled list-inline media-detail pull-right">
+                                      <li class=""><a href="">Like</a></li>
+                                      <li class=""><a href="">Reply</a></li>
+                                  </ul>
+                              </div>
+                          </div>
+
+                          <div class="media">
+                              <a class="pull-left" href="#"><img class="media-object" src="person.png" alt=""></a>
+                              <div class="media-body">
+                                  <h4 class="media-heading">Olivia Clark</h4>
+                                  <p>Attending this event was truly inspiring. It was amazing to see so many people come together to support such a great cause.</p>
+                                  <ul class="list-unstyled list-inline media-detail pull-left">
+                                      <li><i class="fa fa-calendar"></i>27/02/2014</li>
+                                      <li><i class="fa fa-thumbs-up"></i>87</li>
+                                  </ul>
+                                  <ul class="list-unstyled list-inline media-detail pull-right">
+                                      <li class=""><a href="">Like</a></li>
+                                      <li class=""><a href="">Reply</a></li>
+                                  </ul>
+                              </div>
+                          </div>
+
+                          <div class="media">
+                              <a class="pull-left" href="#"><img class="media-object" src="person.png" alt=""></a>
+                              <div class="media-body">
+                                  <h4 class="media-heading">Liam Patel</h4>
+                                  <p>The dedication and hard work of the organizers and volunteers of this charity event truly paid off. It was a huge success and made a real difference in the lives of so many.</p>
+                                  <ul class="list-unstyled list-inline media-detail pull-left">
+                                      <li><i class="fa fa-calendar"></i>02/11/2019</li>
+                                      <li><i class="fa fa-thumbs-up"></i>193</li>
+                                  </ul>
+                                  <ul class="list-unstyled list-inline media-detail pull-right">
+                                      <li class=""><a href="">Like</a></li>
+                                      <li class=""><a href="">Reply</a></li>
+                                  </ul>
+                              </div>
+                          </div>
+
+                          <div class="media">
+                              <a class="pull-left" href="#"><img class="media-object" src="person.png"></a>
+                              <div class="media-body">
+                                  <h4 class="media-heading">Sophia Nguyen</h4>
+                                  <p>Good</p>
+                                  <ul class="list-unstyled list-inline media-detail pull-left">
+                                      <li><i class="fa fa-calendar"></i>22/03/2020</li>
+                                      <li><i class="fa fa-thumbs-up"></i>01</li>
+                                  </ul>
+                                  <ul class="list-unstyled list-inline media-detail pull-right">
+                                      <li class=""><a href="">Like</a></li>
+                                      <li class=""><a href="">Reply</a></li>
+                                  </ul>
+                              </div>
+
+                      
+                      </div>
+                  </div>
+              </div>
+              </div>
+          </section>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
