@@ -5,24 +5,27 @@ from wtforms.validators import InputRequired, Length, Email, EqualTo, NumberRang
 from .models import Event
 
 
-#creates the login information
+# User Login Form 
 class LoginForm(FlaskForm):
-    user_name=StringField("User Name", validators=[InputRequired('Enter user name')])
-    password=PasswordField("Password", validators=[InputRequired('Enter user password')])
+    username=StringField("User Name:", validators=[InputRequired('Enter User Name')])   
+    password=PasswordField("Password:", validators=[InputRequired('Enter a Password')])      
     submit = SubmitField("Login")
 
- # this is the registration form
+# User Register Form
 class RegisterForm(FlaskForm):
-    user_name=StringField("User Name", validators=[InputRequired()])
-    email_id = StringField("Email Address", validators=[Email("Please enter a valid email")])
-    #linking two fields - password should be equal to data entered in confirm
-    password=PasswordField("Password", validators=[InputRequired(),
-                  EqualTo('confirm', message="Passwords should match")])
-    confirm = PasswordField("Confirm Password")
-
-    #submit button
+    user_name=StringField("User Name: ", validators=[InputRequired()])
+    password=PasswordField("Password: ", validators=[InputRequired(),Length(min=6,message="Password must exceed 6 words"),EqualTo('confirm', message="Password didnt match")])
+    confirm = PasswordField("Confirm Password:")
+    email = StringField("Email: ", validators=[InputRequired()])
+    phone = IntegerField("Phone Number: ", validators=[InputRequired()])
     submit = SubmitField("Register")
 
+# Comment Form 
+class CommentForm(FlaskForm):
+    commenttext = TextAreaField("Comment: ", validators=[InputRequired(),Length(min=3, max=400, message="Comment Can't exceed 400 words and must more than 3 words")])
+    submit = SubmitField("Post")
+
+# Booking Form 
 class BookingForm(FlaskForm, Event):
     user_name=StringField("User Name", validators=[InputRequired('Enter user name')])
     email_id = StringField("Email Address", validators=[Email("Please enter a valid email")])
