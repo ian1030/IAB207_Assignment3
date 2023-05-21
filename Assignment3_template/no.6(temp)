@@ -1,1 +1,75 @@
-no.6
+from flask import Flask, render_template, request, redirect, url_for
+
+app = Flask(__name__)
+
+# Placeholder for event data storage
+events = {}
+
+
+@app.route('/create_event', methods=['GET', 'POST'])
+def create_event():
+    if request.method == 'POST':
+        # Retrieve event details from the form
+        event_name = request.form['event_name']
+        event_date = request.form['event_date']
+        # ...
+
+        # Create the event and set its initial state
+        event_id = len(events) + 1
+        event = {
+            'id': event_id,
+            'name': event_name,
+            'date': event_date,
+            'state': 'Open'
+            # Add other event details as needed
+        }
+        events[event_id] = event
+
+        return redirect(url_for('event_details', event_id=event_id))
+    return render_template('create_event.html')
+
+
+@app.route('/event/<int:event_id>')
+def event_details(event_id):
+    event = events.get(event_id)
+    if event:
+        return render_template('event_details.html', event=event)
+    else:
+        return 'Event not found'
+
+
+@app.route('/event/<int:event_id>/edit', methods=['GET', 'POST'])
+def edit_event(event_id):
+    event = events.get(event_id)
+    if event:
+        if request.method == 'POST':
+            # Update event details with the new values
+            event['name'] = request.form['event_name']
+            event['date'] = request.form['event_date']
+            # ...
+
+            return redirect(url_for('event_details', event_id=event_id))
+        return render_template('edit_event.html', event=event)
+    else:
+        return 'Event not found'
+
+
+@app.route('/event/<int:event_id>/cancel')
+def cancel_event(event_id):
+    event = events.get(event_id)
+    if event:
+        event['state'] = 'Cancelled'
+        return redirect(url_for('event_details', event_id=event_id))
+    else:
+        return 'Event not found'
+
+
+@app.route('/logout')
+def logout():
+    # Implement the logic to log out the user
+    return redirect(url_for('home'))
+
+
+if __name__ == '__main__':
+    app.run()
+
