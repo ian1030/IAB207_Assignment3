@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from .models import Destination, Event
-from .forms import DestinationForm, CommentForm, BookingForm
+from .models import Event, Order
+from .forms import CommentForm, BookingForm
 from . import db, app
 import os
 from werkzeug.utils import secure_filename
@@ -22,16 +22,23 @@ def show(id):
 #@login_required
 def booking(event):
   event_obj = Event.query.filter_by(id=event).first()
+  ticket_obj = Event.query.filter_by(id=event).first()
   print('Method type: ', request.method)
   form = BookingForm(event_obj)
   if form.validate_on_submit():
     ticket_no=form.ticket_required.data
-    event_obj.ticket_no = event.ticket_no - ticket_no
-    booking = Event(
+    if event_obj.event_ticket_quantity == ticket_no:
+       event_obj.event_ticket_quantity = 0
+       event_obj.event_status = 'Sold Out'
+    else:
+       event_obj.event_ticket_quantity = event_obj.event_ticket_quantity - ticket_no
+    booking = Order(
                   ticket_no=form.ticket_required.data,  
-                  event=event_obj,
-                  user=current_user,
-                )
+                  ticket = ticket_obj,
+                  event = event_obj,
+                  user= current_user,
+                  number_of_tickets = ticket_no,
+                    )
     # commit to the database
     db.session.add(booking) 
     db.session.commit()

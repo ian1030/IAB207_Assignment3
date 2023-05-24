@@ -5,12 +5,12 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 
 db=SQLAlchemy()
+app=Flask(__name__)
 
 #create a function that creates a web application
 # a web server will run this web application
 def create_app():
   
-    app=Flask(__name__)  # this is the name of the module/package that is calling this app
     app.debug=True
     app.secret_key='somesecretgoeshere'
     #set the app configuration data 
@@ -30,6 +30,7 @@ def create_app():
 
     #create a user loader function takes userid and returns User
     #from .models import User  # importing here to avoid circular references
+    from .models import User
     @login_manager.user_loader
     def load_user(user_id):
        return User.query.get(int(user_id))
