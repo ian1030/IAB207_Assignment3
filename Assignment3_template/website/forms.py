@@ -29,7 +29,7 @@ class CommentForm(FlaskForm):
 class BookingForm(FlaskForm):
     user_name=StringField("User Name", validators=[InputRequired('Enter user name')])
     email_id = StringField("Email Address", validators=[Email("Please enter a valid email")])
-    ticket_required = IntegerField("Ticket Neeeded", validators=[InputRequired("Enter a number"), NumberRange(min=1, max=Event.event_ticket_quantity, message="The input is invalid" )]) #the max can be the tcket number
+    ticket_required = IntegerField("Ticket Neeeded", validators=[InputRequired("Enter a number"), NumberRange(min=1, max=9999, message="The input is invalid" )]) #the max can be the tcket number
 
 
 

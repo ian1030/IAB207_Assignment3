@@ -6,10 +6,10 @@ from flask_login import login_user, login_required,logout_user
 from . import db
 
 #create a blueprint
-bp = Blueprint('auth', __name__)
+authbp = Blueprint('auth', __name__)
 
 #Login
-@bp.route('/login',methods=['GET','POST'])
+@authbp.route('/login',methods=['GET','POST'])
 def login():
     loginform = LoginForm()
     error=None
@@ -28,10 +28,11 @@ def login():
             return redirect(url_for('main.index'))
         else:
             flash(error)
-        return render_template('user.html',form=loginform, heading='Login')
+    return render_template('user.html',form=loginform, heading='Login')
+
 
 #Logout  
-@bp.route('/Logout')
+@authbp.route('/Logout')
 @login_required
 def logout():
     logout_user()
@@ -39,7 +40,7 @@ def logout():
     return redirect(url_for('main.index'))
 
 #Register
-@bp.route('/Register',methods=['GET','POST'])
+@authbp.route('/Register',methods=['GET','POST'])
 def register():
     register = RegisterForm()
 
@@ -55,7 +56,9 @@ def register():
             # don't store the password - create password hash
             pwd_hash = generate_password_hash(password)
             #create a new user model object
-            new_user = User(name=username, password_hash=pwd_hash, emailid=email)
+            new_user = User(name=username, 
+                            password_hash=pwd_hash, 
+                            emailid=email)
             db.session.add(new_user)
             db.session.commit()
             #commit to the database and redirect to HTML page

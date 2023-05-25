@@ -27,22 +27,26 @@ def booking(event):
   form = BookingForm(event_obj)
   if form.validate_on_submit():
     ticket_no=form.ticket_required.data
-    if event_obj.event_ticket_quantity == ticket_no:
-       event_obj.event_ticket_quantity = 0
-       event_obj.event_status = 'Sold Out'
+    if ticket_no > ticket_obj.event_ticket_quantity:
+       flash('Invalid ticket number insert', 'failed')
+       return redirect(url_for('event.show'))
     else:
-       event_obj.event_ticket_quantity = event_obj.event_ticket_quantity - ticket_no
-    booking = Order(
-                  ticket_no=form.ticket_required.data,  
-                  ticket = ticket_obj,
-                  event = event_obj,
-                  user= current_user,
-                  number_of_tickets = ticket_no,
-                    )
-    # commit to the database
-    db.session.add(booking) 
-    db.session.commit()
-    flash('Successfully booked', 'success')
-    #Always end with redirect when form is valid
-    return redirect(url_for('event.show'))
+      if event_obj.event_ticket_quantity == ticket_no:
+        event_obj.event_ticket_quantity = 0
+        event_obj.event_status = 'Sold Out'
+      else:
+        event_obj.event_ticket_quantity = event_obj.event_ticket_quantity - ticket_no
+      booking = Order(
+                    ticket_no=form.ticket_required.data,  
+                    ticket = ticket_obj,
+                    event = event_obj,
+                    user= current_user,
+                    number_of_tickets = ticket_no,
+                      )
+      # commit to the database
+      db.session.add(booking) 
+      db.session.commit()
+      flash('Successfully booked', 'success')
+      #Always end with redirect when form is valid
+      return redirect(url_for('event.show'))
   return render_template('destinations/create.html', form=form)
