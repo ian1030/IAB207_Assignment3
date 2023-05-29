@@ -1,15 +1,15 @@
-from flask_login import UserMixin
 from . import db
+from flask_login import UserMixin
 from datetime import datetime
 
 class User(db.Model, UserMixin):
-    __tablename__ = 'users'
-
+    __tablename__='users'
     user_id = db.Column(db.Integer, primary_key=True, index=True)
     name = db.Column(db.String(50), index=True, nullable=False)
-    email_address = db.Column(db.String(100), index=True, unique=True, nullable=False)
+    emailid = db.Column(db.String(100), index=True, unique=True, nullable=False)
     password_hash = db.Column(db.String, nullable=False)
-    phone_number = db.Column(db.String(10), unique=True, nullable=False)
+    phone = db.Column(db.String(10), unique=True, nullable=False)
+    address = db.Column(db.String(100),index=True,nullable=False)
 
     event = db.relationship('Event', backref='User')
     order = db.relationship('Order', backref='User')

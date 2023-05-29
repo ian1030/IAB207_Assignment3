@@ -13,11 +13,12 @@ class LoginForm(FlaskForm):
 
 # User Register Form
 class RegisterForm(FlaskForm):
-    user_name=StringField("User Name: ", validators=[InputRequired()])
+    name=StringField("User Name: ", validators=[InputRequired()])
+    email = StringField("Email: ", validators=[InputRequired()])
     password=PasswordField("Password: ", validators=[InputRequired(),Length(min=6,message="Password must exceed 6 words"),EqualTo('confirm', message="Password didnt match")])
     confirm = PasswordField("Confirm Password:")
-    email = StringField("Email: ", validators=[InputRequired()])
     phone = IntegerField("Phone Number: ", validators=[InputRequired()])
+    address = TextAreaField("Address: ", validators=[InputRequired()])
     submit = SubmitField("Register")
 
 # Comment Form 

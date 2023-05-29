@@ -4,7 +4,7 @@
 
 <div class="container-fluid">
     <div class="page-header">
-        <h4>{{heading}}</h4>
+        <h1 id="userheading">{{heading}}</h1>
     </div>
     
     <!-- flashes any messages to the user -->
@@ -25,15 +25,18 @@
 <!-- Form rendering is simple and easy if using WTForms -->
 <!-- If you want more granular control, declare the form manually: -->
 <!-- <form action="/route" method="post"> -->
-<div class="col-md-6">
-    {{wtf.render_form(form)}}
-</div>
+
+  <div class="col-md-6">
+    <div id="userform">
+      {{wtf.render_form(form)}}
+    </div>
+  </div>
 
 <!-- When you have login form, then show the user a link to register -->
-{% if heading|lower =='login' %}
-<div class="col-md-4">
+  {% if heading|lower =='login' %}
+  <div class="col-md-4">
     <p>New user? <a href="{{ url_for('auth.register') }}">Click here to register</a>.</p>
+  </div>
+  {% endif %}
 </div>
-{% endif %}
-
 {% endblock %}

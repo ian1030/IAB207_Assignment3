@@ -9,7 +9,7 @@ from . import db
 authbp = Blueprint('auth', __name__)
 
 #Login
-@authbp.route('/login',methods=['GET','POST'])
+@authbp.route('/Login',methods=['GET','POST'])
 def login():
     loginform = LoginForm()
     error=None
@@ -43,11 +43,13 @@ def logout():
 @authbp.route('/Register',methods=['GET','POST'])
 def register():
     register = RegisterForm()
-
     if (register.validate_on_submit() == True):
-            username =register.user_name.data
+            #get data from the form 
+            username = register.name.data
+            email = register.email.data
             password = register.password.data
-            email=register.email_id.data
+            phone_num = register.phone.data
+            address1 = register.register.data
             # Need database in models for 'User' 
             u1 = User.query.filter_by(name=username).first()
             if u1:
@@ -56,9 +58,8 @@ def register():
             # don't store the password - create password hash
             pwd_hash = generate_password_hash(password)
             #create a new user model object
-            new_user = User(name=username, 
-                            password_hash=pwd_hash, 
-                            emailid=email)
+            new_user = User(name=username, emailid=email,password_hash=pwd_hash,phone=phone_num,address=address1)
+ 
             db.session.add(new_user)
             db.session.commit()
             #commit to the database and redirect to HTML page
