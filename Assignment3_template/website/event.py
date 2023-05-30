@@ -24,7 +24,7 @@ def booking(event):
   event_obj = Event.query.filter_by(id=event).first()
   ticket_obj = Event.query.filter_by(id=event).first()
   print('Method type: ', request.method)
-  form = BookingForm(event_obj)
+  form = BookingForm()
   if form.validate_on_submit():
     ticket_no=form.ticket_required.data
     if ticket_no > ticket_obj.event_ticket_quantity:

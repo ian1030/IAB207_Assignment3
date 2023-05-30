@@ -14,17 +14,19 @@ def login():
     loginform = LoginForm()
     error=None
     if(loginform.validate_on_submit()==True):
-        username = loginform.user_name.data
+        username = loginform.username.data
         password = loginform.password.data
-        # need database in models for "User"
         u1 = User.query.filter_by(name=username).first()
+        # need database in models for "User"
         if u1 is None:
             error='Incorrect user name'
-        elif not check_password_hash(u1.password_hash,password):
+        #check the password - notice password hash function
+        elif not check_password_hash(u1.password_hash, password): # takes the hash and password
             error='Incorrect password'
         if error is None:
+            #all good, set the login_user of flask_login to manage the user
             login_user(u1)
-            flash('Succesfully Login')
+            flash('Succesfully login')
             return redirect(url_for('main.index'))
         else:
             flash(error)
@@ -49,7 +51,7 @@ def register():
             email = register.email.data
             password = register.password.data
             phone_num = register.phone.data
-            address1 = register.register.data
+            address1 = register.address.data
             # Need database in models for 'User' 
             u1 = User.query.filter_by(name=username).first()
             if u1:
