@@ -1,75 +1,108 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Blueprint, flash, render_template, request, redirect, url_for
+from .models import Event, User
+from .forms import EventForm
+from flask_login import login_required, current_user
+from . import db
+from datetime import datetime
 
-app = Flask(__name__)
+eventbp = Blueprint('event', __name__, url_prefix='/events')
 
-# Placeholder for event data storage
-events = {}
-
-
-@app.route('/create_event', methods=['GET', 'POST'])
+@eventbp.route('/create', methods=['GET', 'POST'])
+@login_required
 def create_event():
-    if request.method == 'POST':
-        # Retrieve event details from the form
-        event_name = request.form['event_name']
-        event_date = request.form['event_date']
-        # ...
+    form = EventForm()
+    if form.validate_on_submit():
+        event_name = form.event_name.data
+        event_location = form.event_location.data
+        event_date = form.event_date.data
+        event_time = form.event_time.data
+        event_description = form.event_description.data
+        event_category = form.event_category.data
+        event_image = form.event_image.data
+        event_ticket_quantity = form.event_ticket_quantity.data
+        event_ticket_price = form.event_ticket_price.data
 
-        # Create the event and set its initial state
-        event_id = len(events) + 1
-        event = {
-            'id': event_id,
-            'name': event_name,
-            'date': event_date,
-            'state': 'Open'
-            # Add other event details as needed
-        }
-        events[event_id] = event
+        event_status = 'Open'  # Initial state of the event
 
-        return redirect(url_for('event_details', event_id=event_id))
-    return render_template('create_event.html')
+        new_event = Event(
+            event_name=event_name,
+            event_location=event_location,
+            event_date=event_date,
+            event_time=event_time,
+            event_description=event_description,
+            event_category=event_category,
+            event_image=event_image,
+            event_ticket_quantity=event_ticket_quantity,
+            event_ticket_price=event_ticket_price,
+            event_status=event_status,
+            user=current_user
+        )
 
+        db.session.add(new_event)
+        db.session.commit()
 
-@app.route('/event/<int:event_id>')
-def event_details(event_id):
-    event = events.get(event_id)
-    if event:
-        return render_template('event_details.html', event=event)
-    else:
-        return 'Event not found'
+        flash('Event created successfully!', 'success')
+        return redirect(url_for('event.show', event_id=new_event.id))
 
-
-@app.route('/event/<int:event_id>/edit', methods=['GET', 'POST'])
-def edit_event(event_id):
-    event = events.get(event_id)
-    if event:
-        if request.method == 'POST':
-            # Update event details with the new values
-            event['name'] = request.form['event_name']
-            event['date'] = request.form['event_date']
-            # ...
-
-            return redirect(url_for('event_details', event_id=event_id))
-        return render_template('edit_event.html', event=event)
-    else:
-        return 'Event not found'
+    return render_template('event/create.html', form=form)
 
 
-@app.route('/event/<int:event_id>/cancel')
-def cancel_event(event_id):
-    event = events.get(event_id)
-    if event:
-        event['state'] = 'Cancelled'
-        return redirect(url_for('event_details', event_id=event_id))
-    else:
-        return 'Event not found'
+@eventbp.route('/<int:event_id>', methods=['GET', 'POST'])
+def show(event_id):
+    event = Event.query.get(event_id)
+    if not event:
+        flash('Event not found', 'error')
+        return redirect(url_for('main.index'))
+
+    return render_template('event/show.html', event=event)
 
 
-@app.route('/logout')
-def logout():
-    # Implement the logic to log out the user
-    return redirect(url_for('home'))
+@eventbp.route('/<int:event_id>/update', methods=['GET', 'POST'])
+@login_required
+def update(event_id):
+    event = Event.query.get(event_id)
+    if not event:
+        flash('Event not found', 'error')
+        return redirect(url_for('main.index'))
+
+    if event.user != current_user:
+        flash('You do not have permission to update this event', 'error')
+        return redirect(url_for('event.show', event_id=event.id))
+
+    form = EventForm(obj=event)
+    if form.validate_on_submit():
+        event.event_name = form.event_name.data
+        event.event_location = form.event_location.data
+        event.event_date = form.event_date.data
+        event.event_time = form.event_time.data
+        event.event_description = form.event_description.data
+        event.event_category = form.event_category.data
+        event.event_image = form.event_image.data
+        event.event_ticket_quantity = form.event_ticket_quantity.data
+        event.event_ticket_price = form.event_ticket_price.data
+
+        db.session.commit()
+
+        flash('Event updated successfully!', 'success')
+        return redirect(url_for('event.show', event_id=event.id))
+
+    return render_template('event/update.html', form=form, event=event)
 
 
-if __name__ == '__main__':
-    app.run()
+@eventbp.route('/<int:event_id>/cancel', methods=['POST'])
+@login_required
+def cancel(event_id):
+    event = Event.query.get(event_id)
+    if not event:
+        flash('Event not found', 'error')
+        return redirect(url_for('main.index'))
 
+    if event.user != current_user:
+        flash('You do not have permission to cancel this event', 'error')
+        return redirect(url_for('event.show', event_id=event.id))
+
+    event.event_status = 'Cancelled'
+    db.session.commit()
+
+    flash('Event cancelled successfully!', 'success')
+    return redirect(url_for('event.show', event_id=event.id))
