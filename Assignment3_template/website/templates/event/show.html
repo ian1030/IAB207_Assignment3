@@ -29,11 +29,20 @@
         <p>Date: {{ event.event_date.strftime('%d %B, %Y') }}</p>
         <p>Time: {{ event.event_time.strftime('%I:%M %p') }}</p>
         <p>Venue: {{ event.event_location }}</p>
-        <form>
-
-    <button type="button" class="btn btn-outline-dark btn btn-light" data-bs-toggle="modal" data-bs-target="#booking">
-    Book Event
-    </button>
+        <div class="d-flex justify-content-between">
+            {% if event.user == current_user %}
+            <a href="{{ url_for('event.update', event_id=event.id) }}" class="btn btn-outline-dark btn-light mr-2">Update Event</a>
+                <form action="{{ url_for('event.cancel', event_id=event.id) }}" method="post" style="display: inline;">
+                    <button type="submit" class="btn btn-outline-dark btn-danger mr-2">Cancel Event</button>
+                </form>
+            {% endif %}
+            {% if event.user != current_user %}
+            <button type="button" class="btn btn-outline-dark btn-light" data-bs-toggle="modal" data-bs-target="#booking">
+                Book Event
+            </button>
+            {% endif %}
+        </div>
+        
 
         <div class="modal fade" id="booking" tabindex="-1" aria-labelledby="bookingLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
