@@ -7,10 +7,17 @@ from flask_login import LoginManager
 db=SQLAlchemy()
 app=Flask(__name__)
 
+#upload img path 
+
+
 #create a function that creates a web application
 # a web server will run this web application
 def create_app():
-  
+    UPLOAD_FOLDER = '/static/image'
+    app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+    
+    bootstrap = Bootstrap(app)
+    
     app.debug=True
     app.secret_key='somesecretgoeshere'
     #set the app configuration data 
@@ -18,8 +25,6 @@ def create_app():
     #initialise db with flask app
     db.init_app(app)
 
-    bootstrap = Bootstrap(app)
-    
     #initialize the login manager
     login_manager = LoginManager()
     login_manager.login_view='auth.login'
