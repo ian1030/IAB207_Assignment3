@@ -1,7 +1,7 @@
 from flask import Blueprint, flash, render_template, request, url_for, redirect
 from .models import User, Event, Order
 #import event  
-from .forms import EventForm,CommentForm,BookingForm
+from .forms import EventForm,CommentForm,BookingForm,UpdateEventForm
 from flask_login import current_user, login_required
 from . import db
 from datetime import datetime
@@ -68,7 +68,7 @@ def check_upload_file(form):
     fp.save(upload_path)
     return db_upload_path
 
-#Update Event 
+# Update Event 
 @eventbp.route('/<int:event_id>/update', methods=['GET', 'POST'])
 @login_required
 def update(event_id):
@@ -81,24 +81,22 @@ def update(event_id):
         flash('You do not have permission to update this event', 'error')
         return redirect(url_for('event.show', event_id=event.id))
 
-    update = EventForm(obj=event)
-    if update.validate_on_submit():
-        event.eventname = update.event_name.data
-        event.eventlocation = update.event_location.data
-        event.eventdate = update.event_date.data
-        event.eventtime = update.event_time.data
-        event.description = update.event_description.data
-        event.category = update.event_category.data
-        event.image = update.event_image.data 
-        event.ticket = update.event_ticket_quantity.data
-        event.price = update.event_ticket_price.data 
+    form = UpdateEventForm(obj=event)
+    if form.validate_on_submit():
+        db_file_path = check_upload_file(form)  # Add this line to get the file path
+        eventstatus = 'Open'  # Add this line to set the event status
 
+        form.populate_obj(event)  # Update the event object with form data
+        event.event_image = db_file_path  # Set the updated file path
+        event.event_status = eventstatus  # Set the updated event status
         db.session.commit()
 
         flash('Event updated successfully!', 'success')
         return redirect(url_for('event.show', event_id=event.id))
 
-    return render_template('event/update.html', form=update, event=event)
+    return render_template('event/update.html', form=form, event=event)
+
+
 
 #Cancel Event
 @eventbp.route('/<int:event_id>/cancel', methods=['POST'])
