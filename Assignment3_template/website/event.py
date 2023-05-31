@@ -1,6 +1,6 @@
 from flask import Blueprint, flash, render_template, request, url_for, redirect
 from .models import User, Event, Order
-#imoport event  
+#import event  
 from .forms import EventForm,CommentForm,BookingForm
 from flask_login import current_user, login_required
 from . import db
@@ -15,9 +15,12 @@ eventbp = Blueprint('event',__name__,url_prefix='/events')
 
 
 #show event 
-@eventbp.route('/<id>')
-def show(id):
-    event = Event.query.filter_by(id=id).first()
+@eventbp.route('/<int:event_id>')
+def show(event_id):
+    event = Event.query.filter_by(id=event_id).first()
+    if not event:
+        flash('Event not found', 'error')
+        return redirect(url_for('main.index'))
     # create the comment form
     cform = CommentForm()    
     return render_template('event/show.html', event=event, form=cform)
