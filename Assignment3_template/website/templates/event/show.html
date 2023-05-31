@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% from 'bootstarp5/form.html' import render_form %}
+{% import "bootstrap4/form.html" as wtf %}
 
 {% block content %}
 
@@ -21,19 +21,28 @@
 <div class="container mt-5">
     <div class="row">
       <div class="col-md-6">
-        <img src="https://images.pexels.com/photos/6646918/pexels-photo-6646918.jpeg" class="img-fluid" alt="Event Image" />
+        <img src="{{ event.event_image }}" class="img-fluid" alt="Event Image" />
       </div>
       <div class="col-md-6">
-        <h1 class="mb-3">Charity Food Giving</h1>
-        <p>Join us for a volunteering opportunity! This upcoming charity event is focused on collecting donations for those in need and also you will be helping us in giving out foods!..</p>
-        <p>Date: 1st May, 2023</p>
-        <p>Time: 2:00 PM to 6:00 PM</p>
-        <p>Venue: Brisbane City, QLD 4000</p>
-        <form>
-
-    <button type="button" class="btn btn-outline-dark btn btn-light" data-bs-toggle="modal" data-bs-target="#booking">
-    Book Event
-    </button>
+        <h1 class="mb-3">{{ event.event_name }}</h1>
+        <p>{{ event.event_description }}</p>
+        <p>Date: {{ event.event_date.strftime('%d %B, %Y') }}</p>
+        <p>Time: {{ event.event_time.strftime('%I:%M %p') }}</p>
+        <p>Venue: {{ event.event_location }}</p>
+        <div class="d-flex justify-content-between">
+            {% if event.user == current_user %}
+            <a href="{{ url_for('event.update', event_id=event.id) }}" class="btn btn-outline-dark btn-light mr-2">Update Event</a>
+                <form action="{{ url_for('event.cancel', event_id=event.id) }}" method="post" style="display: inline;">
+                    <button type="submit" class="btn btn-outline-dark btn-danger mr-2">Cancel Event</button>
+                </form>
+            {% endif %}
+            {% if event.user != current_user %}
+            <button type="button" class="btn btn-outline-dark btn-light" data-bs-toggle="modal" data-bs-target="#booking">
+                Book Event
+            </button>
+            {% endif %}
+        </div>
+        
 
         <div class="modal fade" id="booking" tabindex="-1" aria-labelledby="bookingLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -76,16 +85,17 @@
                               </fieldset>
                           </form>
                           
-                          <h3>4 Comments</h3>
+                          <h3>{{ comments|length }} Comments</h3>
                           
+                          {% for comment in comments %}
                           <div class="media">
                               <a class="pull-left" href="#"><img class="media-object" src="person.png" alt=""></a>
                               <div class="media-body">
-                                  <h4 class="media-heading">Ethan Martinez</h4>
-                                  <p>It was an amazing experience!</p>
+                                  <h4 class="media-heading">{{ comment.user.name }}</h4>
+                                  <p>{{ comment.comment }}</p>
                                   <ul class="list-unstyled list-inline media-detail pull-left">
-                                      <li><i class="fa fa-calendar"></i>09/03/2021</li>
-                                      <li><i class="fa fa-thumbs-up"></i>25</li>
+                                      <li><i class="fa fa-calendar"></i>{{ comment.comment_date.strftime('%d/%m/%Y') }}</li>
+                                      <li><i class="fa fa-thumbs-up"></i>{{ comment.likes }}</li>
                                   </ul>
                                   <ul class="list-unstyled list-inline media-detail pull-right">
                                       <li class=""><a href="">Like</a></li>
@@ -93,55 +103,8 @@
                                   </ul>
                               </div>
                           </div>
+                          {% endfor %}
 
-                          <div class="media">
-                              <a class="pull-left" href="#"><img class="media-object" src="person.png" alt=""></a>
-                              <div class="media-body">
-                                  <h4 class="media-heading">Olivia Clark</h4>
-                                  <p>Attending this event was truly inspiring. It was amazing to see so many people come together to support such a great cause.</p>
-                                  <ul class="list-unstyled list-inline media-detail pull-left">
-                                      <li><i class="fa fa-calendar"></i>27/02/2014</li>
-                                      <li><i class="fa fa-thumbs-up"></i>87</li>
-                                  </ul>
-                                  <ul class="list-unstyled list-inline media-detail pull-right">
-                                      <li class=""><a href="">Like</a></li>
-                                      <li class=""><a href="">Reply</a></li>
-                                  </ul>
-                              </div>
-                          </div>
-
-                          <div class="media">
-                              <a class="pull-left" href="#"><img class="media-object" src="person.png" alt=""></a>
-                              <div class="media-body">
-                                  <h4 class="media-heading">Liam Patel</h4>
-                                  <p>The dedication and hard work of the organizers and volunteers of this charity event truly paid off. It was a huge success and made a real difference in the lives of so many.</p>
-                                  <ul class="list-unstyled list-inline media-detail pull-left">
-                                      <li><i class="fa fa-calendar"></i>02/11/2019</li>
-                                      <li><i class="fa fa-thumbs-up"></i>193</li>
-                                  </ul>
-                                  <ul class="list-unstyled list-inline media-detail pull-right">
-                                      <li class=""><a href="">Like</a></li>
-                                      <li class=""><a href="">Reply</a></li>
-                                  </ul>
-                              </div>
-                          </div>
-
-                          <div class="media">
-                              <a class="pull-left" href="#"><img class="media-object" src="person.png"></a>
-                              <div class="media-body">
-                                  <h4 class="media-heading">Sophia Nguyen</h4>
-                                  <p>Good</p>
-                                  <ul class="list-unstyled list-inline media-detail pull-left">
-                                      <li><i class="fa fa-calendar"></i>22/03/2020</li>
-                                      <li><i class="fa fa-thumbs-up"></i>01</li>
-                                  </ul>
-                                  <ul class="list-unstyled list-inline media-detail pull-right">
-                                      <li class=""><a href="">Like</a></li>
-                                      <li class=""><a href="">Reply</a></li>
-                                  </ul>
-                              </div>
-
-                      
                       </div>
                   </div>
               </div>
