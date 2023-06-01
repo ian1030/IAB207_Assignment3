@@ -143,8 +143,8 @@ def booking(event_id):
       # commit to the database
       db.session.add(booking) 
       db.session.commit()
-      flash('Successfully booked', 'success')
+      flash('Successfully booked, booking details have been added', 'success')
       #Always end with redirect when form is valid
-      return redirect(url_for('event.show', event_id=event.id))
+      return redirect(url_for('main.history'))
   return render_template('event/update.html', form=form, event=event, heading='booking')
 
