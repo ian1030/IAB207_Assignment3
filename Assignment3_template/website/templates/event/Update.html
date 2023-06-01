@@ -4,11 +4,33 @@
 
 {% block content %} 
 
+{% with messages = get_flashed_messages() %}
+{% if messages %} <!-- check if there are any messages -->
+<div class="container-fluid">
+    <div class="row mt-3 mb-3">
+    <div class="col-md-12">
+    {% for message in messages %} <!--loop through the messages-->
+        <div class="alert alert-info">{{ message }}</div> <!--display as alert-->
+    {% endfor %}
+    </div>
+</div>
+</div>
+{% endif %}
+{% endwith %}
+
 <div class="container">
     <div class="row mt-5">
         <div class="col-md-12">
-            <h1>Update Event</h1>
-            {{ wtf.render_form(form) }}
+            {% if heading|lower == 'create' %}
+                <h1>Create Event</h1>
+                {{ wtf.render_form(form) }}
+            {% elif heading|lower == 'update' %}
+                <h1>Update Event</h1>
+                {{ wtf.render_form(form) }}
+            {% elif heading|lower == 'booking' %}
+                <h1>Buy Ticket</h1>
+                {{ wtf.render_form(form) }}
+            {% endif %}
         </div>
     </div>
 </div>

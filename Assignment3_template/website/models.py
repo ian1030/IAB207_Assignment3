@@ -70,4 +70,4 @@ class Order(db.Model):
     event_id = db.Column(db.Integer, db.ForeignKey('events.id'))
 
     user = db.relationship('User', backref='Order')
-    ticket = db.relationship('Event', backref='Order')     
+    event = db.relationship('Event', backref='Order')     

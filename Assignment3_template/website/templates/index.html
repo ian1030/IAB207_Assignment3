@@ -20,10 +20,12 @@
         <div class="mask">
             <div class="d-flex justify-content-center align-items-center h-100">
             <div class="text">
-                <h1 class="mb-3" style="font-size:64px">Join Us Now</h1>
-                <h4 class="mb-3" style="font-size:32px">interested?</h4>
-                <a class="btn btn-outline-dark btn btn-light btn-lg" href="#!" role="button" style="border-radius: 50px;border-width:3px">Register here</a>
-            </div>
+                <h1 class="mb-3" style="font-size:64px">Find the Event</h1>
+                <h4 class="mb-3" style="font-size:32px">Interested?</h4>
+                <form class="form-inline d-flex flex-nowrap" action="{{url_for('main.search')}}" >
+                  <input type="text" name="search" class="form-control flex-grow-1 my-1 mr-sm-2" id="SearchForm">
+                  <button type="submit" class="flex-shrink-1 btn btn-primary my-1">Submit</button>
+                </form>            
             </div>
         </div>
         </div>
@@ -39,11 +41,11 @@
             <div class="col-md-3">
               <h3>Categories</h3>
               <div class="list-group" id="list-group">
-                <a href="" class="list-group-item list-group-item-action">All</a>
-                <a href="" class="list-group-item list-group-item-action">Charity Run</a>
-                <a href="" class="list-group-item list-group-item-action">Charity Auction</a>
-                <a href="" class="list-group-item list-group-item-action">Charity Food Donation</a>
-                <a href="" class="list-group-item list-group-item-action">Others</a>
+                <a href="{{ url_for('main.all') }}" class="list-group-item list-group-item-action">All</a>
+                <a href="{{ url_for('main.run') }}" class="list-group-item list-group-item-action">Charity Run</a>
+                <a href="{{ url_for('main.auction') }}" class="list-group-item list-group-item-action">Charity Auction</a>
+                <a href="{{ url_for('main.donation') }}" class="list-group-item list-group-item-action">Charity Food Donation</a>
+                <a href="{{ url_for('main.other') }}" class="list-group-item list-group-item-action">Others</a>
               </div>
             </div>
             <div class="col-md-9">
