@@ -118,6 +118,24 @@ def cancel(event_id):
     flash('Event cancelled successfully!', 'success')
     return redirect(url_for('event.show', event_id=event.id))
 
+@eventbp.route('/<int:event_id>/open', methods=['POST'])
+@login_required
+def open(event_id):
+    event = Event.query.get(event_id)
+    if not event:
+        flash('Event not found', 'error')
+        return redirect(url_for('main.index'))
+
+    if event.user != current_user:
+        flash('You do not have permission to cancel this event', 'error')
+        return redirect(url_for('event.show', event_id=event.id))
+
+    event.event_status = 'Open'
+    db.session.commit()
+
+    flash('Event opened successfully!', 'success')
+    return redirect(url_for('event.show', event_id=event.id))
+
 
 #Booking Event Ticket
 @eventbp.route('/<int:event_id>/booking', methods=['GET', 'POST'])
