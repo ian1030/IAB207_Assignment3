@@ -1,7 +1,7 @@
 from flask import Blueprint, flash, render_template, request, url_for, redirect
 from .models import User, Event, Order
-#imoport event  
-from .forms import EventForm,CommentForm,BookingForm
+#import event  
+from .forms import EventForm,CommentForm,BookingForm,UpdateEventForm
 from flask_login import current_user, login_required
 from . import db
 from datetime import datetime
@@ -15,12 +15,16 @@ eventbp = Blueprint('event',__name__,url_prefix='/events')
 
 
 #show event 
-@eventbp.route('/<id>')
-def show(id):
-    event = Event.query.filter_by(id=id).first()
+@eventbp.route('/<int:event_id>')
+def show(event_id):
+    event = Event.query.filter_by(id=event_id).first()
+    if not event:
+        flash('Event not found', 'error')
+        return redirect(url_for('main.index'))
     # create the comment form
-    cform = CommentForm()    
-    return render_template('event/show.html', event=event, form=cform)
+    cform = CommentForm()   
+    bform = BookingForm()   
+    return render_template('event/show.html', event=event, commentform=cform, bookingform=bform)
 
 #Create Event 
 @eventbp.route('/create',methods=['GET','POST'])
@@ -49,7 +53,7 @@ def create_event():
 
         flash('Event created successfully!','success')
         return redirect(url_for('event.create_event'))
-    return render_template('event/create.html',form=create)
+    return render_template('event/update.html',form=create, heading='create')
 
 def check_upload_file(form):
     #get file data from form  
@@ -65,7 +69,7 @@ def check_upload_file(form):
     fp.save(upload_path)
     return db_upload_path
 
-#Update Event 
+# Update Event 
 @eventbp.route('/<int:event_id>/update', methods=['GET', 'POST'])
 @login_required
 def update(event_id):
@@ -78,24 +82,22 @@ def update(event_id):
         flash('You do not have permission to update this event', 'error')
         return redirect(url_for('event.show', event_id=event.id))
 
-    update = EventForm(obj=event)
-    if update.validate_on_submit():
-        event.eventname = update.event_name.data
-        event.eventlocation = update.event_location.data
-        event.eventdate = update.event_date.data
-        event.eventtime = update.event_time.data
-        event.description = update.event_description.data
-        event.category = update.event_category.data
-        event.image = update.event_image.data 
-        event.ticket = update.event_ticket_quantity.data
-        event.price = update.event_ticket_price.data 
+    form = UpdateEventForm(obj=event)
+    if form.validate_on_submit():
+        db_file_path = check_upload_file(form)  # Add this line to get the file path
+        eventstatus = 'Open'  # Add this line to set the event status
 
+        form.populate_obj(event)  # Update the event object with form data
+        event.event_image = db_file_path  # Set the updated file path
+        event.event_status = eventstatus  # Set the updated event status
         db.session.commit()
 
         flash('Event updated successfully!', 'success')
         return redirect(url_for('event.show', event_id=event.id))
 
-    return render_template('event/update.html', form=update, event=event)
+    return render_template('event/update.html', form=form, event=event, heading='update')
+
+
 
 #Cancel Event
 @eventbp.route('/<int:event_id>/cancel', methods=['POST'])
@@ -116,38 +118,51 @@ def cancel(event_id):
     flash('Event cancelled successfully!', 'success')
     return redirect(url_for('event.show', event_id=event.id))
 
+@eventbp.route('/<int:event_id>/open', methods=['POST'])
+@login_required
+def open(event_id):
+    event = Event.query.get(event_id)
+    if not event:
+        flash('Event not found', 'error')
+        return redirect(url_for('main.index'))
+
+    if event.user != current_user:
+        flash('You do not have permission to cancel this event', 'error')
+        return redirect(url_for('event.show', event_id=event.id))
+
+    event.event_status = 'Open'
+    db.session.commit()
+
+    flash('Event opened successfully!', 'success')
+    return redirect(url_for('event.show', event_id=event.id))
+
 
 #Booking Event Ticket
-@eventbp.route('/<event>/booking', methods = ['GET', 'POST'])
+@eventbp.route('/<int:event_id>/booking', methods=['GET', 'POST'])
 @login_required
-def booking(event):
-  event_obj = Event.query.filter_by(id=event).first()
-  ticket_obj = Event.query.filter_by(id=event).first()
-  print('Method type: ', request.method)
-  form = BookingForm()
+def booking(event_id):
+  event = Event.query.filter_by(id=event_id).first()
+  form = BookingForm(obj=event)
   if form.validate_on_submit():
     ticket_no=form.ticket_required.data
-    if ticket_no > ticket_obj.event_ticket_quantity:
+    if ticket_no > event.event_ticket_quantity:
        flash('Invalid ticket number insert', 'failed')
-       return redirect(url_for('event.show'))
     else:
-      if event_obj.event_ticket_quantity == ticket_no:
-        event_obj.event_ticket_quantity = 0
-        event_obj.event_status = 'Sold Out'
+      if event.event_ticket_quantity == ticket_no:
+        event.event_ticket_quantity = 0
+        event.event_status = 'Sold Out'
       else:
-        event_obj.event_ticket_quantity = event_obj.event_ticket_quantity - ticket_no
+        event.event_ticket_quantity = event.event_ticket_quantity - ticket_no
       booking = Order(
-                    ticket_no=form.ticket_required.data,  
-                    ticket = ticket_obj,
-                    event = event_obj,
+                    event = event,
                     user= current_user,
                     number_of_tickets = ticket_no,
                       )
       # commit to the database
       db.session.add(booking) 
       db.session.commit()
-      flash('Successfully booked', 'success')
+      flash('Successfully booked, booking details have been added', 'success')
       #Always end with redirect when form is valid
-      return redirect(url_for('event.show'))
-  return render_template('destinations/create.html', form=form)
+      return redirect(url_for('main.history'))
+  return render_template('event/update.html', form=form, event=event, heading='booking')
 

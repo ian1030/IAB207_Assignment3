@@ -31,8 +31,8 @@
                      <a class="nav-item nav-link" href="{{ url_for('auth.register') }}">Register</a>
                      <a class="nav-item nav-link" href="{{ url_for('auth.login') }}">Log In</a>
                     {% endif %}
-                  <a class="nav-item nav-link" href="#">Create An Event</a>  
-                  <a class="nav-item nav-link" href="#">History</a>                                   
+                  <a class="nav-item nav-link" href="{{ url_for('event.create_event') }}">Create An Event</a>  
+                  <a class="nav-item nav-link" href="{{ url_for('main.history') }}">History</a>                                   
                 </div>  
             </div>
         </nav>

@@ -49,3 +49,16 @@ class EventForm(FlaskForm):
     event_ticket_quantity = IntegerField('Ticket Quantity: ', validators=[InputRequired(),NumberRange(min=1)])
     event_ticket_price = IntegerField('Ticket Price: ', validators=[InputRequired(),NumberRange(min=0)])
     submit = SubmitField("Create")
+
+class UpdateEventForm(FlaskForm):
+    event_name = StringField("Event Name: ", validators=[InputRequired()])
+    event_location= StringField("Location: ",validators=[InputRequired()])
+    event_date = DateField("Date: ",validators=[InputRequired()])
+    event_time = TimeField("Time: ",validators=[InputRequired()])
+    event_description = TextAreaField("Description: ", validators=[InputRequired()])
+    # left event category with dropdown menu , still firgure it out 
+    event_category = StringField("Category: ", validators=[InputRequired()])
+    image = FileField('Event Image', validators=[FileRequired(message='Image cannnot be empty'),FileAllowed(Allowed_File,message='only supports PNG, JPG, JPEG')])
+    event_ticket_quantity = IntegerField('Ticket Quantity: ', validators=[InputRequired(),NumberRange(min=1)])
+    event_ticket_price = IntegerField('Ticket Price: ', validators=[InputRequired(),NumberRange(min=0)])
+    submit = SubmitField("Update")
