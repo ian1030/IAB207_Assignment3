@@ -48,34 +48,27 @@
                 <a href="{{ url_for('main.other') }}" class="list-group-item list-group-item-action">Others</a>
               </div>
             </div>
+            
+            
             <div class="col-md-9">
               <div class="row" id="eventList">
+                {% for event in events %}
                 <div class="col-md-4 mb-4">
                   <div class="card">
-                    <img src="https://images.pexels.com/photos/6646918/pexels-photo-6646918.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=350" class="card-img-top">
+                    <img src="{{event.event_image}}" class="card-img-top">
                     <div class="card-body">
-                      <h5 class="card-title">Charity Run</h5>
-                      <span class="badge badge-success">Open</span>
-                      <p class="card-text">Join us for a volunteering opportunity! This upcoming charity event is focused on collecting donations for those in need and also you will be helping us in giving out foods!.</p>
-                      <a href="details2.html" class="btn btn-outline-dark btn btn-light" role="button" style="border-radius: 10px;border-width:3px">View Details</a>
+                      <h5 class="card-title">{{event.event_name}}</h5>
+                      <span class="badge badge-success">{{event.event_status}}</span>
+                      <p class="card-text">{{event.event_description}}</p>
+                      <a href="{{url_for('event.show', event_id=event.id)}}" class="btn btn-outline-dark btn btn-light" role="button" style="border-radius: 10px;border-width:3px">View Details</a>
                     </div>
                   </div>
-                </div>
-                <div class="col-md-4 mb-4" data-category="sports">
-                  <div class="card">
-                    <img src="https://images.pexels.com/photos/6348129/pexels-photo-6348129.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=350" class="card-img-top">
-                    <div class="card-body">
-                      <h5 class="card-title">Volunteering</h5>
-                      <span class="badge badge-success">Open</span>
-                      <p class="card-text">Join us for a rewarding volunteering experience and make a difference in your community.</p>
-                      <a href="details2.html" class="btn btn-outline-dark btn btn-light" role="button" style="border-radius: 10px;border-width:3px">View Details</a>
-                    </div>  
-                  </div>
-                </div>
+                </div>  
+                {% endfor %}   
+              </div>
+            </div>            
         </div>
-      </div>
-    </div>
-  </div>
+     </div>
 
 
 
