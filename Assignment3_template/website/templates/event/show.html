@@ -32,9 +32,16 @@
         <div class="d-flex justify-content-between">
             {% if event.user == current_user %}
             <a href="{{ url_for('event.update', event_id=event.id) }}" class="btn btn-outline-dark btn-light mr-2">Update Event</a>
+                {% if event.event_status == 'Open' %}
                 <form action="{{ url_for('event.cancel', event_id=event.id) }}" method="post" style="display: inline;">
                     <button type="submit" class="btn btn-outline-dark btn-danger mr-2">Cancel Event</button>
                 </form>
+                {% endif %}
+                {% if event.event_status == 'Cancelled' %}
+                <form action="{{ url_for('event.open', event_id=event.id) }}" method="post" style="display: inline;">
+                    <button type="submit" class="btn btn-outline-dark mr-2">Open Event</button>
+                </form>
+                {% endif %}
             {% endif %}
             {% if event.user != current_user %}
             <a href="{{ url_for('event.booking', event_id=event.id) }}" class="btn btn-outline-dark btn-light mr-2">Book Event</a>

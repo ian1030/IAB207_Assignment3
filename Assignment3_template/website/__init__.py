@@ -3,6 +3,7 @@ from flask import Flask
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+from flask import Flask, render_template
 
 db=SQLAlchemy()
 app=Flask(__name__)
@@ -49,5 +50,11 @@ def create_app():
     
     return app
 
+@app.errorhandler(404) 
+# inbuilt function which takes error as parameter 
+def not_found(e): 
+  return render_template("404.html", error=e)
 
-
+@app.errorhandler(500)
+def special_exception_handler(e):
+    return render_template("500.html", error=e)
