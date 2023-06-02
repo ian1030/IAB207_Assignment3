@@ -1,5 +1,5 @@
 from flask import Blueprint, flash, render_template, request, url_for, redirect
-from .models import User, Event, Order
+from .models import User, Event, Order,Comment
 #import event  
 from .forms import EventForm,CommentForm,BookingForm,UpdateEventForm
 from flask_login import current_user, login_required
@@ -166,3 +166,20 @@ def booking(event_id):
       return redirect(url_for('main.history'))
   return render_template('event/update.html', form=form, event=event, heading='booking')
 
+#Comment   
+@eventbp.route('/<int:event_id>/comment',methods=['GET', 'POST'])
+@login_required
+def comment(event_id):
+    form = CommentForm()
+    event = Event.query.filter_by(id=event_id).first()
+    if (form.validate_on_submit() == True):
+      
+        new_comment = Comment(comment=form.text.data,
+                              user = current_user,
+                              event = event)
+      
+        db.session.add(new_comment)
+        db.session.commit()
+
+        flash('Comment added successfully!','success')
+    return render_template('event/show.html',commentform=form,event=event)
