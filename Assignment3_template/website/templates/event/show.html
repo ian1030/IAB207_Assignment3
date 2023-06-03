@@ -53,42 +53,27 @@
         </form>
       </div>
     </div>
+    
     <hr>
+    <!-- Comments -->  
     <div class="row mt-5">
-      <div class="col-md-12">
-          <section class="content-item" id="comments">
+        <div class="col-md-12">
+            <section class="content-item" id="comments">
               <div class="container">   
-                  <div class="row">
-                      <div class="col-sm-8">   
-                        {{wtf.render_form(commentform)}}
-                          
-                          <h3>{{ comments|length }} Comments</h3>
-                          
-                          {% for comment in comments %}
-                          <div class="media">
-                              <a class="pull-left" href="#"><img class="media-object" src="person.png" alt=""></a>
-                              <div class="media-body">
-                                  <h4 class="media-heading">{{ comment.user.name }}</h4>
-                                  <p>{{ comment.comment }}</p>
-                                  <ul class="list-unstyled list-inline media-detail pull-left">
-                                      <li><i class="fa fa-calendar"></i>{{ comment.comment_date.strftime('%d/%m/%Y') }}</li>
-                                      <li><i class="fa fa-thumbs-up"></i>{{ comment.likes }}</li>
-                                  </ul>
-                                  <ul class="list-unstyled list-inline media-detail pull-right">
-                                      <li class=""><a href="">Like</a></li>
-                                      <li class=""><a href="">Reply</a></li>
-                                  </ul>
-                              </div>
-                          </div>
-                          {% endfor %}
-
-                      </div>
-                  </div>
-              </div>
-              </div>
-          </section>
-      </div>
+                    <div class="row">
+                        <div class="col-sm-8">   
+                            {{wtf.render_form(commentform,"/events/{0}/comment".format(event.id))}}
+                            {% for comment in event.comments %}
+                            <div class="col-md-12">  
+                                <b>{{comment.user.name}} <span class="ml-2 text-muted">{{ comment.comment_date.strftime('%d/%m/%Y') }}</span></b>
+                                <p>{{comment.comment}}</p>  
+                            </div> 
+                            {% endfor %} 
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
     </div>
-  </div>
-
+</div>
 {% endblock %}
