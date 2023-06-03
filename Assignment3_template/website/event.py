@@ -1,20 +1,18 @@
 from flask import Blueprint, flash, render_template, request, url_for, redirect
-from .models import User, Event, Order,Comment
-#import event  
-from .forms import EventForm,CommentForm,BookingForm,UpdateEventForm
+from .models import User, Event, Order, Comment
+from .forms import EventForm, CommentForm, BookingForm, UpdateEventForm
 from flask_login import current_user, login_required
 from . import db
 from datetime import datetime
-import os 
+import os
 from werkzeug.utils import secure_filename
 
 
-#create blueprint 
-eventbp = Blueprint('event',__name__,url_prefix='/events')
+#create blueprint
+eventbp = Blueprint('event', __name__, url_prefix='/events')
 
 
-
-#show event 
+#show event
 @eventbp.route('/<int:event_id>')
 def show(event_id):
     event = Event.query.filter_by(id=event_id).first()
@@ -22,54 +20,56 @@ def show(event_id):
         flash('Event not found', 'error')
         return redirect(url_for('main.index'))
     # create the comment form
-    cform = CommentForm()   
-    bform = BookingForm()   
+    cform = CommentForm()
+    bform = BookingForm()
     return render_template('event/show.html', event=event, commentform=cform, bookingform=bform)
 
-#Create Event 
-@eventbp.route('/create',methods=['GET','POST'])
+
+#Create Event
+@eventbp.route('/create', methods=['GET', 'POST'])
 @login_required
 def create_event():
     create = EventForm()
-    if (create.validate_on_submit() == True):
-
+    if create.validate_on_submit():
         db_file_path = check_upload_file(create)
         eventstatus = 'Open'
-    
+
         new_event = Event(event_name=create.event_name.data,
                           event_location=create.event_location.data,
-                          event_date = create.event_date.data,
-                          event_time = create.event_time.data,
-                          event_description = create.event_description.data,
-                          event_category = create.event_category.data,
-                          event_image = db_file_path,
-                          event_ticket_quantity = create.event_ticket_quantity.data,
-                          event_ticket_price = create.event_ticket_price.data,
-                          event_status = eventstatus,
-                          user = current_user)
-        
+                          event_date=create.event_date.data,
+                          event_time=create.event_time.data,
+                          event_description=create.event_description.data,
+                          event_category=create.event_category.data,
+                          event_image=db_file_path,
+                          event_ticket_quantity=create.event_ticket_quantity.data,
+                          event_ticket_price=create.event_ticket_price.data,
+                          event_status=eventstatus,
+                          user=current_user)
+
         db.session.add(new_event)
         db.session.commit()
 
-        flash('Event created successfully!','success')
+        flash('Event created successfully!', 'success')
         return redirect(url_for('event.create_event'))
-    return render_template('event/update.html',form=create, heading='create')
+    return render_template('event/update.html', form=create, heading='create')
+
 
 def check_upload_file(form):
-    #get file data from form  
-    fp=form.image.data
-    filename=fp.filename
-    #get the current path of the module file… store image file relative to this path  
-    BASE_PATH=os.path.dirname(__file__)
+    # get file data from form
+    fp = form.image.data
+    filename = fp.filename
+    # get the current path of the module file… store image file relative to this path
+    BASE_PATH = os.path.dirname(__file__)
     # upload file location – directory of this file/static/image
-    upload_path=os.path.join(BASE_PATH,'static/image',secure_filename(filename))
-    #store relative path in DB as image location in HTML is relative
-    db_upload_path='/static/image/' + secure_filename(filename)
-    #save the file and return the db upload path  
+    upload_path = os.path.join(BASE_PATH, 'static/image', secure_filename(filename))
+    # store relative path in DB as image location in HTML is relative
+    db_upload_path = '/static/image/' + secure_filename(filename)
+    # save the file and return the db upload path
     fp.save(upload_path)
     return db_upload_path
 
-# Update Event 
+
+# Update Event
 @eventbp.route('/<int:event_id>/update', methods=['GET', 'POST'])
 @login_required
 def update(event_id):
@@ -98,8 +98,7 @@ def update(event_id):
     return render_template('event/update.html', form=form, event=event, heading='update')
 
 
-
-#Cancel Event
+# Cancel Event
 @eventbp.route('/<int:event_id>/cancel', methods=['POST'])
 @login_required
 def cancel(event_id):
@@ -117,6 +116,7 @@ def cancel(event_id):
 
     flash('Event cancelled successfully!', 'success')
     return redirect(url_for('event.show', event_id=event.id))
+
 
 @eventbp.route('/<int:event_id>/open', methods=['POST'])
 @login_required
@@ -137,49 +137,48 @@ def open(event_id):
     return redirect(url_for('event.show', event_id=event.id))
 
 
-#Booking Event Ticket
+# Booking Event Ticket
 @eventbp.route('/<int:event_id>/booking', methods=['GET', 'POST'])
 @login_required
 def booking(event_id):
-  event = Event.query.filter_by(id=event_id).first()
-  form = BookingForm(obj=event)
-  if form.validate_on_submit():
-    ticket_no=form.ticket_required.data
-    if ticket_no > event.event_ticket_quantity:
-       flash('Invalid ticket number insert', 'failed')
-    else:
-      if event.event_ticket_quantity == ticket_no:
-        event.event_ticket_quantity = 0
-        event.event_status = 'Sold Out'
-      else:
-        event.event_ticket_quantity = event.event_ticket_quantity - ticket_no
-      booking = Order(
-                    event = event,
-                    user= current_user,
-                    number_of_tickets = ticket_no,
-                      )
-      # commit to the database
-      db.session.add(booking) 
-      db.session.commit()
-      flash('Successfully booked, booking details have been added', 'success')
-      #Always end with redirect when form is valid
-      return redirect(url_for('main.history'))
-  return render_template('event/update.html', form=form, event=event, heading='booking')
+    event = Event.query.filter_by(id=event_id).first()
+    form = BookingForm(obj=event)
+    if form.validate_on_submit():
+        ticket_no = form.ticket_required.data
+        if ticket_no > event.event_ticket_quantity:
+            flash('Invalid ticket number insert', 'failed')
+        else:
+            if event.event_ticket_quantity == ticket_no:
+                event.event_ticket_quantity = 0
+                event.event_status = 'Sold Out'
+            else:
+                event.event_ticket_quantity = event.event_ticket_quantity - ticket_no
+            booking = Order(
+                event=event,
+                user=current_user,
+                number_of_tickets=ticket_no,
+            )
+            # commit to the database
+            db.session.add(booking)
+            db.session.commit()
+            flash('Successfully booked, booking details have been added', 'success')
+            # Always end with redirect when form is valid
+            return redirect(url_for('main.history'))
+    return render_template('event/update.html', form=form, event=event, heading='booking')
 
-#Comment   
-@eventbp.route('/<int:event_id>/comment',methods=['GET', 'POST'])
+
+# Comment
+@eventbp.route('/<int:event_id>/comment', methods=['GET', 'POST'])
 @login_required
 def comment(event_id):
     form = CommentForm()
     event = Event.query.filter_by(id=event_id).first()
-    if (form.validate_on_submit() == True):
-      
-        new_comment = Comment(comment=form.text.data,
-                              user = current_user,
-                              event = event)
-      
+    if form.validate_on_submit():
+        new_comment = Comment(comment=form.text.data, user=current_user, event=event)
         db.session.add(new_comment)
         db.session.commit()
 
-        flash('Comment added successfully!','success')
-    return render_template('event/show.html',commentform=form,event=event)
+        flash('Comment added successfully!', 'success')
+        return redirect(url_for('event.show', event_id=event.id))  # Redirect to the event show page
+
+    return render_template('event/show.html', commentform=form, event=event)
