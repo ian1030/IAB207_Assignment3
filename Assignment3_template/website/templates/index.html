@@ -59,17 +59,13 @@
               <div class="card-body">
                 <h5 class="card-title">{{ event.event_name }}</h5>
                 {% if event.event_status == 'Cancelled' %}
-                  <span class="badge badge-danger">Cancelled</span>
-                  {% set event_status = 'Cancelled' %}
+                  <span class="badge badge-danger">{{ event.event_status }}</span>
                 {% elif event.event_ticket_quantity == 0 %}
-                  <span class="badge badge-secondary">Sold Out</span>
-                  {% set event_status = 'Sold Out' %}
-                {% elif event.event_date < current_datetime.date() %}
-                  <span class="badge badge-warning">Inactive</span>
-                  {% set event_status = 'Inactive' %}
+                  <span class="badge badge-secondary">{{ event.event_status }}</span>
+                {% elif event.event_status == 'Inactive' %}
+                  <span class="badge badge-dark">{{ event.event_status }}</span>
                 {% else %}
                   <span class="badge badge-success">{{ event.event_status }}</span>
-                  {% set event_status = event.event_status %}
                 {% endif %}
                 <p class="card-text">{{ event.event_description }}</p>
                 <a href="{{ url_for('event.show', event_id=event.id, event_status=event_status) }}" class="btn btn-outline-dark btn btn-light" role="button" style="border-radius: 10px;border-width:3px">View Details</a>

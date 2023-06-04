@@ -10,8 +10,7 @@ bp = Blueprint('main', __name__)
 @bp.route('/')
 def index():
     events = Event.query.all()
-    current_datetime = datetime.now()
-    return render_template('index.html', events=events, current_datetime=current_datetime)
+    return render_template('index.html', events=events)
 
 
 @bp.route('/search')
@@ -33,32 +32,28 @@ def all():
 def run():
     search = '%' + 'run' + '%'
     events = Event.query.filter(Event.event_category.like(search)).all()
-    current_datetime = datetime.now()
-    return render_template('index.html', events=events, current_datetime=current_datetime)
+    return render_template('index.html', events=events)
 
 
 @bp.route('/auction')
 def auction():
     search = '%' + 'auction' + '%'
     events = Event.query.filter(Event.event_category.like(search)).all()
-    current_datetime = datetime.now()
-    return render_template('index.html', events=events, current_datetime=current_datetime)
+    return render_template('index.html', events=events)
 
 
 @bp.route('/donation')
 def donation():
     search = '%' + 'donation' + '%'
     events = Event.query.filter(Event.event_category.like(search)).all()
-    current_datetime = datetime.now()
-    return render_template('index.html', events=events, current_datetime=current_datetime)
+    return render_template('index.html', events=events)
 
 
 @bp.route('/other')
 def other():
     search = '%' + 'other' + '%'
     events = Event.query.filter(Event.event_category.like(search)).all()
-    current_datetime = datetime.now()
-    return render_template('index.html', events=events, current_datetime=current_datetime)
+    return render_template('index.html', events=events)
 
 
 @bp.route('/history')
@@ -66,7 +61,6 @@ def other():
 def history():
     user_id = current_user.id
     order = Order.query.filter(Order.user_id.like(user_id)).all()
-    current_datetime = datetime.now()
     return render_template('history.html', orders=order)
 
 

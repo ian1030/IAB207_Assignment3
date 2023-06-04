@@ -19,14 +19,12 @@ def show(event_id):
     # Create the comment form
     cform = CommentForm()
     bform = BookingForm()
-    current_datetime = datetime.now()
 
-    return render_template('event/show.html', event=event, commentform=cform, bookingform=bform, current_datetime=current_datetime)
+    return render_template('event/show.html', event=event, commentform=cform, bookingform=bform)
 
 @eventbp.route('/create', methods=['GET', 'POST'])
 @login_required
 def create_event():
-    current_datetime = datetime.now()
     create = EventForm()
     create.event_category.choices = [
         ('Charity Run', 'Charity Run'),
@@ -88,7 +86,7 @@ def determine_event_status(form):
 @eventbp.route('/<int:event_id>/invalidbooking', methods=['GET', 'POST'])
 def disablebooking(event_id):
      event = Event.query.filter_by(id=event_id).first()
-     flash('You cant book ticket for this event', 'error')
+     flash('Booking not allowed', 'error')
      return redirect(url_for('event.show', event_id=event.id))
 
 
@@ -96,7 +94,6 @@ def disablebooking(event_id):
 @eventbp.route('/<int:event_id>/update', methods=['GET', 'POST'])
 @login_required
 def update(event_id):
-    current_datetime = datetime.now()
     event = Event.query.get(event_id)
     if not event:
         flash('Event not found', 'error')
@@ -126,7 +123,6 @@ def update(event_id):
 @eventbp.route('/<int:event_id>/cancel', methods=['POST'])
 @login_required
 def cancel(event_id):
-    current_datetime = datetime.now()
     event = Event.query.get(event_id)
     if not event:
         flash('Event not found', 'error')
@@ -166,7 +162,6 @@ def open(event_id):
 @eventbp.route('/<int:event_id>/booking', methods=['GET', 'POST'])
 @login_required
 def booking(event_id):
-    current_datetime = datetime.now()
     event = Event.query.filter_by(id=event_id).first()
     form = BookingForm(obj=event)
     if form.validate_on_submit():
@@ -197,7 +192,6 @@ def booking(event_id):
 @eventbp.route('/<int:event_id>/comment', methods=['GET', 'POST'])
 @login_required
 def comment(event_id):
-    current_datetime = datetime.now()
     form = CommentForm()
     event = Event.query.filter_by(id=event_id).first()
     if form.validate_on_submit():
