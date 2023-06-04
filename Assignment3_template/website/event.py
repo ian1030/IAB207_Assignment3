@@ -10,14 +10,12 @@ from werkzeug.utils import secure_filename
 #create blueprint
 eventbp = Blueprint('event', __name__, url_prefix='/events')
 
-# Show Event
 @eventbp.route('/<int:event_id>')
 def show(event_id):
     event = Event.query.filter_by(id=event_id).first()
     if not event:
         flash('Event not found', 'error')
         return redirect(url_for('main.index'))
-
     # Create the comment form
     cform = CommentForm()
     bform = BookingForm()
@@ -25,7 +23,6 @@ def show(event_id):
 
     return render_template('event/show.html', event=event, commentform=cform, bookingform=bform, current_datetime=current_datetime)
 
-# Create Event
 @eventbp.route('/create', methods=['GET', 'POST'])
 @login_required
 def create_event():
@@ -61,8 +58,8 @@ def create_event():
 
         flash('Event created successfully!', 'success')
         return redirect(url_for('event.create_event'))
-    
     return render_template('event/update.html', form=create, heading='create')
+
 
 def check_upload_file(form):
     # get file data from form
@@ -77,6 +74,7 @@ def check_upload_file(form):
     # save the file and return the db upload path
     fp.save(upload_path)
     return db_upload_path
+
 
 def determine_event_status(form):
     if form.event_ticket_quantity.data == 0:
