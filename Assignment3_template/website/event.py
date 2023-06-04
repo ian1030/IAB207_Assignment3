@@ -7,44 +7,51 @@ from datetime import datetime
 import os
 from werkzeug.utils import secure_filename
 
-
 #create blueprint
 eventbp = Blueprint('event', __name__, url_prefix='/events')
 
-
-#show event
 @eventbp.route('/<int:event_id>')
 def show(event_id):
     event = Event.query.filter_by(id=event_id).first()
     if not event:
         flash('Event not found', 'error')
         return redirect(url_for('main.index'))
-    # create the comment form
+    # Create the comment form
     cform = CommentForm()
     bform = BookingForm()
-    return render_template('event/show.html', event=event, commentform=cform, bookingform=bform)
+    current_datetime = datetime.now()
 
+    return render_template('event/show.html', event=event, commentform=cform, bookingform=bform, current_datetime=current_datetime)
 
-#Create Event
 @eventbp.route('/create', methods=['GET', 'POST'])
 @login_required
 def create_event():
+    current_datetime = datetime.now()
     create = EventForm()
+    create.event_category.choices = [
+        ('Charity Run', 'Charity Run'),
+        ('Charity Action', 'Charity Action'),
+        ('Charity Food Donation', 'Charity Food Donation'),
+        ('Others', 'Others')
+    ]
+
     if create.validate_on_submit():
         db_file_path = check_upload_file(create)
-        eventstatus = 'Open'
+        event_status = determine_event_status(create)
 
-        new_event = Event(event_name=create.event_name.data,
-                          event_location=create.event_location.data,
-                          event_date=create.event_date.data,
-                          event_time=create.event_time.data,
-                          event_description=create.event_description.data,
-                          event_category=create.event_category.data,
-                          event_image=db_file_path,
-                          event_ticket_quantity=create.event_ticket_quantity.data,
-                          event_ticket_price=create.event_ticket_price.data,
-                          event_status=eventstatus,
-                          user=current_user)
+        new_event = Event(
+            event_name=create.event_name.data,
+            event_location=create.event_location.data,
+            event_date=create.event_date.data,
+            event_time=create.event_time.data,
+            event_description=create.event_description.data,
+            event_category=create.event_category.data,
+            event_image=db_file_path,
+            event_ticket_quantity=create.event_ticket_quantity.data,
+            event_ticket_price=create.event_ticket_price.data,
+            event_status=event_status,
+            user=current_user
+        )
 
         db.session.add(new_event)
         db.session.commit()
@@ -69,10 +76,20 @@ def check_upload_file(form):
     return db_upload_path
 
 
+def determine_event_status(form):
+    if form.event_ticket_quantity.data == 0:
+        return 'Sold Out'
+    elif form.event_date.data < datetime.now().date():
+        return 'Inactive'
+    else:
+        return 'Open'
+
+
 # Update Event
 @eventbp.route('/<int:event_id>/update', methods=['GET', 'POST'])
 @login_required
 def update(event_id):
+    current_datetime = datetime.now()
     event = Event.query.get(event_id)
     if not event:
         flash('Event not found', 'error')
@@ -102,6 +119,7 @@ def update(event_id):
 @eventbp.route('/<int:event_id>/cancel', methods=['POST'])
 @login_required
 def cancel(event_id):
+    current_datetime = datetime.now()
     event = Event.query.get(event_id)
     if not event:
         flash('Event not found', 'error')
@@ -141,6 +159,7 @@ def open(event_id):
 @eventbp.route('/<int:event_id>/booking', methods=['GET', 'POST'])
 @login_required
 def booking(event_id):
+    current_datetime = datetime.now()
     event = Event.query.filter_by(id=event_id).first()
     form = BookingForm(obj=event)
     if form.validate_on_submit():
@@ -171,6 +190,7 @@ def booking(event_id):
 @eventbp.route('/<int:event_id>/comment', methods=['GET', 'POST'])
 @login_required
 def comment(event_id):
+    current_datetime = datetime.now()
     form = CommentForm()
     event = Event.query.filter_by(id=event_id).first()
     if form.validate_on_submit():

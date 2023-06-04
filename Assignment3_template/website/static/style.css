@@ -65,3 +65,30 @@ h1 {
   text-align: left;
   padding: 10px;
 }
+
+.event-image {
+  width: 600px;
+  height: 500px; 
+  object-fit: cover; /* Maintain aspect ratio and crop if needed */
+}
+
+.btn-update {
+  width: 100%;
+}
+
+.btn-cancel {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.event-owner {
+  font-size: 24px;
+  color: green;
+  margin-top: 10px;
+  font-weight: bold;
+  text-transform: uppercase;
+  text-align: center;
+  border: 2px solid green;
+  padding: 10px;
+  border-radius: 10px;
+}
