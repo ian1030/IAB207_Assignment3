@@ -39,6 +39,7 @@ def create_event():
         db_file_path = check_upload_file(create)
         event_status = determine_event_status(create)
 
+
         new_event = Event(
             event_name=create.event_name.data,
             event_location=create.event_location.data,
@@ -84,6 +85,12 @@ def determine_event_status(form):
     else:
         return 'Open'
 
+@eventbp.route('/<int:event_id>/invalidbooking', methods=['GET', 'POST'])
+def disablebooking(event_id):
+     event = Event.query.filter_by(id=event_id).first()
+     flash('You cant book ticket for this event', 'error')
+     return redirect(url_for('event.show', event_id=event.id))
+
 
 # Update Event
 @eventbp.route('/<int:event_id>/update', methods=['GET', 'POST'])
@@ -101,12 +108,12 @@ def update(event_id):
 
     form = UpdateEventForm(obj=event)
     if form.validate_on_submit():
+        event_status = determine_event_status(form)
         db_file_path = check_upload_file(form)  # Add this line to get the file path
-        eventstatus = 'Open'  # Add this line to set the event status
 
         form.populate_obj(event)  # Update the event object with form data
         event.event_image = db_file_path  # Set the updated file path
-        event.event_status = eventstatus  # Set the updated event status
+        event.event_status = event_status  # Set the updated event status
         db.session.commit()
 
         flash('Event updated successfully!', 'success')

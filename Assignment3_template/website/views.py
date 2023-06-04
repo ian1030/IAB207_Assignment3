@@ -84,4 +84,5 @@ def search_order():
         return render_template('history.html', orders=order)
     else:
         return redirect(url_for('main.history'))
-        return redirect(url_for('main.history'))
+
+
