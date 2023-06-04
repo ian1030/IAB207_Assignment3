@@ -27,6 +27,10 @@
             {% elif heading|lower == 'update' %}
                 <h1>Update Event</h1>
                 {{ wtf.render_form(form) }}
+                {% if event.event_image %}
+                    <h5>Previous Image:</h5>
+                    <img src="{{ event.event_image }}" class="img-fluid" alt="Previous Image">
+                {% endif %}
             {% elif heading|lower == 'booking' %}
                 <h1>Buy Ticket</h1>
                 {{ wtf.render_form(form) }}
@@ -36,12 +40,3 @@
 </div>
 
 {% endblock %}
-Make sure to adjust the template code according to your specific CSS classes and styling.
-
-Let me know if you need any further assistance!
-
-
-
-
-
-
