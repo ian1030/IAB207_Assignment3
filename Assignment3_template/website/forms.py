@@ -50,7 +50,7 @@ class EventForm(FlaskForm):
         FileRequired(message='Image cannot be empty'),
         FileAllowed(Allowed_File, message='Only supports PNG, JPG, JPEG')
     ])
-    event_ticket_quantity = IntegerField('Ticket Quantity:', validators=[InputRequired(), NumberRange(min=0)])
+    event_ticket_quantity = IntegerField('Ticket Quantity:', validators=[InputRequired(), NumberRange(min=1)])
     event_ticket_price = IntegerField('Ticket Price:', validators=[InputRequired(), NumberRange(min=0)])
     submit = SubmitField("Create")
 
@@ -70,6 +70,6 @@ class UpdateEventForm(FlaskForm):
         FileRequired(message='Image cannot be empty'),
         FileAllowed(Allowed_File, message='Only supports PNG, JPG, JPEG')
     ])
-    event_ticket_quantity = IntegerField('New Ticket Quantity:', validators=[InputRequired(), NumberRange(min=0)])
+    event_ticket_quantity = IntegerField('New Ticket Quantity:', validators=[InputRequired(), NumberRange(min=1)])
     event_ticket_price = IntegerField('New Ticket Price:', validators=[InputRequired(), NumberRange(min=0)])
     submit = SubmitField("Update")
