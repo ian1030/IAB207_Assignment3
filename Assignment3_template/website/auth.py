@@ -57,6 +57,10 @@ def register():
             if u1:
                 flash('User name already exists, please login')
                 return redirect(url_for('auth.login'))
+            p1 = User.query.filter_by(phone=phone_num).first()
+            if p1:
+                flash('Phone number registered, Please try another phone number')
+                return redirect(url_for('auth.register'))
             # don't store the password - create password hash
             pwd_hash = generate_password_hash(password)
             #create a new user model object
