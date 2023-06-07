@@ -19,7 +19,7 @@ def login():
         u1 = User.query.filter_by(name=username).first()
         # need database in models for "User"
         if u1 is None:
-            error='Incorrect user name'
+            error='User does not exist or invalid username'
         #check the password - notice password hash function
         elif not check_password_hash(u1.password_hash, password): # takes the hash and password
             error='Incorrect password'
