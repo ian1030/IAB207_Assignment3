@@ -28,7 +28,7 @@ def create_event():
     create = EventForm()
     create.event_category.choices = [
         ('Charity Run', 'Charity Run'),
-        ('Charity Action', 'Charity Action'),
+        ('Charity Auction', 'Charity Auction'),
         ('Charity Food Donation', 'Charity Food Donation'),
         ('Others', 'Others')
     ]
