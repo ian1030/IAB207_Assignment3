@@ -15,7 +15,7 @@ class LoginForm(FlaskForm):
 # User Register Form
 class RegisterForm(FlaskForm):
     name = StringField("User Name:", validators=[InputRequired()])
-    email = StringField("Email:", validators=[InputRequired()])
+    email = StringField("Email:", validators=[InputRequired(), Email("This field requires a valid email address")])
     password = PasswordField("Password:", validators=[InputRequired(), Length(min=6, message="Password must exceed 6 words"), EqualTo('confirm', message="Password didn't match")])
     confirm = PasswordField("Confirm Password:")
     phone = IntegerField("Phone Number:", validators=[InputRequired()])
@@ -29,7 +29,7 @@ class CommentForm(FlaskForm):
 
 # Booking Form 
 class BookingForm(FlaskForm):
-    email_id = StringField("Email Address", validators=[Email("Please enter a valid email")])
+    email_id = StringField("Email Address", validators=[InputRequired(), Email("Please enter a valid email")])
     ticket_required = IntegerField("Ticket Needed", validators=[InputRequired("Enter a number"), NumberRange(min=1, max=99, message="The input is invalid")])
     submit = SubmitField("Book")
 
