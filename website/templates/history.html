@@ -39,7 +39,11 @@
               <li class="list-group-item" style="font-family:Darumadrop One">Reference ID: {{order.id}}</li>
               <li class="list-group-item" style="font-family:Darumadrop One">Booked on: {{order.get_time_nice()}}</li>
               <li class="list-group-item" style="font-family:Darumadrop One">No Ticket ordered: {{order.number_of_tickets}}</li>
-              <li class="list-group-item" style="font-family:Darumadrop One">Total Price: {{order.number_of_tickets*order.event.event_ticket_price}}</li>
+              {% if order.event.event_ticket_price == 0.0 %}
+              <li class="list-group-item" style="font-family:Darumadrop One"> Total Price: Free</li>
+              {% else %}
+              <li class="list-group-item" style="font-family:Darumadrop One"> Total Price: {{order.number_of_tickets*order.event.event_ticket_price}}</li>
+              {% endif %}
             </ul>
           </div>
         </div>
