@@ -2,7 +2,7 @@
 
 {% import "bootstrap4/form.html" as wtf %}
 
-{% block content %} 
+{% block content %}
 
 {% with messages = get_flashed_messages() %}
 {% if messages %} <!-- check if there are any messages -->
@@ -33,6 +33,8 @@
                 {% endif %}
             {% elif heading|lower == 'booking' %}
                 <h1>Buy Ticket</h1>
+                <p>Ticket Available: {{ event.event_ticket_quantity }}</p>
+                <p>Ticket Price: {{ event.event_ticket_price }}</p>
                 {{ wtf.render_form(form) }}
             {% endif %}
         </div>
