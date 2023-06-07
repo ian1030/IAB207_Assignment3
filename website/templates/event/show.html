@@ -27,8 +27,16 @@
         <p>Date: {{ event.event_date.strftime('%d %B, %Y') }}</p>
         <p>Time: {{ event.event_time.strftime('%I:%M %p') }}</p>
         <p>Venue: {{ event.event_location }}</p>
-        <p>Ticket Available: {{ event.event_ticket_quantity }}</p>
-        <p>Ticket Price: {{ event.event_ticket_price }}</p>
+        {% if event.event_ticket_quantity == 0.0 %}
+        <p> Ticket Quantity: SOLD OUT</p>
+        {% else %}
+        <p> Ticket Quantity: {{event.event_ticket_quantity}}</p>
+        {% endif %}
+        {% if event.event_ticket_price == 0.0 %}
+        <p> Ticket Price: Free</p>
+        {% else %}
+        <p> Ticket Price: {{event.event_ticket_price}}</p>
+        {% endif %}
         <p> Status: {{ event.event_status }}</p>
         <div class="d-flex flex-column">
             {% if event.user == current_user %}
